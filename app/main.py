@@ -1,0 +1,19 @@
+from fastapi import FastAPI
+from app.api.routes import documents,askllm,tickets,auth
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(title="ResolveIQ")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+app.include_router(documents.router)
+app.include_router(askllm.router)
+app.include_router(tickets.router)
+app.include_router(auth.router) 

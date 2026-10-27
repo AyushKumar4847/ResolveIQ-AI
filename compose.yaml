@@ -1,0 +1,28 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: resolveiq_db
+    environment:
+      POSTGRES_USER: resolveiq
+      POSTGRES_PASSWORD: resolveiq
+      POSTGRES_DB: resolveiq
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: resolveiq_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://resolveiq:resolveiq@db:5432/resolveiq
+    depends_on:
+      - db
+
+
+volumes:
+  postgres_data:
