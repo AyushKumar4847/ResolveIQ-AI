@@ -17,7 +17,7 @@ def fake_agent(db: Session = Depends(get_db)):
             id=uuid.uuid4(),
             username="ci_agent",
             email="ci_agent@resolveiq.ai",
-            hashed_password="dummy_password",
+            password="dummy_password",
             role="agent"
         )
         db.add(user)

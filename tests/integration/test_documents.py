@@ -17,7 +17,7 @@ def fake_agent(db: Session = Depends(get_db)):
             id=uuid.uuid4(),
             username="ci_agent",
             email="ci_agent@resolveiq.ai",
-            hashed_password="dummy_password",
+            password="dummy_password",
             role="agent"
         )
         db.add(user)
@@ -28,7 +28,7 @@ def fake_agent(db: Session = Depends(get_db)):
 
 def fake_agent2(db: Session = Depends(get_db)):
     user = db.query(User).filter(User.role == "user").first()
-    return user or User(id=uuid.uuid4(), role="user", username="regular", email="user@test.com")
+    return user or User(id=uuid.uuid4(), role="user", username="regular", email="user@test.com", password="dummy_password")
 
 
 app.dependency_overrides[get_current_user] = fake_agent
