@@ -8,7 +8,7 @@ import axios from 'axios';
  * withCredentials: true ensures the browser sends these cookies automatically.
  */
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: '',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
