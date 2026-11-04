@@ -2,12 +2,16 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+# Prevent pip / build tools from using RAM-backed /tmp which hits Errno 28 No Space Left on small cloud instances
+ENV TMPDIR=/var/tmp
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 
+# Install CPU-only PyTorch first to prevent downloading ~7GB of unused NVIDIA CUDA GPU binaries
 RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
 RUN pip install --no-cache-dir -r requirements.txt
