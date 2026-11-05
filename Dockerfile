@@ -20,6 +20,7 @@ COPY app/ app/
 COPY alembic/ alembic/
 COPY alembic.ini .
 COPY tests/ tests/
+COPY pdfs/ pdfs/
 
 EXPOSE 8000
 
