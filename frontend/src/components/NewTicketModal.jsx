@@ -38,7 +38,7 @@ export const NewTicketModal = ({ isOpen, onClose, onCreated }) => {
 
   // Debounced auto-suggestion as user writes details
   useEffect(() => {
-    if (!description || description.trim().length < 15) {
+    if (!description || description.trim().length < 5) {
       setSuggestedSolution(null);
       return;
     }

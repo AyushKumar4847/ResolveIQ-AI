@@ -24,7 +24,7 @@ export const Tickets = () => {
     try {
       setLoading(true);
       const res = await api.get('/tickets/');
-      setTickets(res.data || []);
+      setTickets(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error('Failed to fetch tickets:', err);
     } finally {
@@ -32,7 +32,8 @@ export const Tickets = () => {
     }
   };
 
-  const filteredTickets = tickets.filter((t) => {
+  const safeTickets = Array.isArray(tickets) ? tickets : [];
+  const filteredTickets = safeTickets.filter((t) => {
     const matchesSearch =
       t.subject.toLowerCase().includes(search.toLowerCase()) ||
       t.description.toLowerCase().includes(search.toLowerCase()) ||

@@ -39,10 +39,10 @@ export const Dashboard = () => {
       ]);
 
       if (ticketsRes.status === 'fulfilled') {
-        setTickets(ticketsRes.value.data || []);
+        setTickets(Array.isArray(ticketsRes.value.data) ? ticketsRes.value.data : []);
       }
       if (docsRes.status === 'fulfilled') {
-        setDocuments(docsRes.value.data || []);
+        setDocuments(Array.isArray(docsRes.value.data) ? docsRes.value.data : []);
       }
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
@@ -51,8 +51,9 @@ export const Dashboard = () => {
     }
   };
 
-  const openTickets = tickets.filter((t) => t.status === 'open');
-  const resolvedTickets = tickets.filter((t) => t.status === 'resolved' || t.status === 'closed');
+  const safeTickets = Array.isArray(tickets) ? tickets : [];
+  const openTickets = safeTickets.filter((t) => t.status === 'open');
+  const resolvedTickets = safeTickets.filter((t) => t.status === 'resolved' || t.status === 'closed');
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">

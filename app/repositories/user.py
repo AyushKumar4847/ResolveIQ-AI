@@ -12,13 +12,17 @@ def create_user(db, userinfo):
 
     hashed_password = hash_password(userinfo.password)
 
+    role = getattr(userinfo, "role", "user") or "user"
+
     save_user = User(
         username=userinfo.username,
         email=userinfo.email,
-        password=hashed_password
+        password=hashed_password,
+        role=role,
     )
     db.add(save_user)
     db.commit()
+    db.refresh(save_user)
 
     return save_user
 

@@ -22,7 +22,7 @@ export const Documents = () => {
     try {
       setLoading(true);
       const res = await api.get('/documents/');
-      setDocuments(res.data || []);
+      setDocuments(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error('Failed to load documents:', err);
     } finally {
