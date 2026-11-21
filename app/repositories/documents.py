@@ -3,8 +3,8 @@ from app.models.documents import Document, DocumentChunk
 import uuid
 
 
-def create_document(db: Session, filename: str, owner_id) -> Document:
-    doc = Document(filename=filename, owner_id=owner_id)
+def create_document(db: Session, filename: str, owner_id,storage_key: str | None = None) -> Document:
+    doc = Document(filename=filename, owner_id=owner_id,storage_key=storage_key)
     db.add(doc)
     db.commit()
     db.refresh(doc)

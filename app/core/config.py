@@ -10,6 +10,13 @@ class Settings(BaseSettings):
     ALGORITHM:str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_DAYS:int
+    
+   # AWS S3 Cloud Storage
+    AWS_ACCESS_KEY_ID: str | None = None
+    AWS_SECRET_ACCESS_KEY: str | None = None
+    AWS_REGION: str = "us-east-1"
+    S3_BUCKET_NAME: str | None = None
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

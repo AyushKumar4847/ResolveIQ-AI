@@ -110,3 +110,13 @@ def test_delete_document():
 
     response2 = client.delete(f'/documents/{file_id}')
     assert response2.status_code == 404
+
+
+def test_download_document():
+    with open(PDF_PATH, 'rb') as f:
+        response = client.post('/documents/upload',
+        files={'file': ('Download_Test.pdf', f, 'application/pdf')}
+    )
+    doc_id = response.json()['id']
+    download_res = client.get(f'/documents/{doc_id}/download')
+    assert download_res.status_code == 200

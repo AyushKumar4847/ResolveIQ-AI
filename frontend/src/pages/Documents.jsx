@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FileText, Upload, Trash2, CheckCircle2, AlertTriangle, FileUp, BookOpen } from 'lucide-react';
+import { FileText, Upload, Trash2, CheckCircle2, AlertTriangle, FileUp, BookOpen, Download } from 'lucide-react';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { Badge } from '../components/Badge';
@@ -65,6 +65,33 @@ export const Documents = () => {
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleDownload = async (docId, filename) => {
+    try {
+      // 1. Try fetching the S3 Pre-Signed URL
+      const res = await api.get(`/documents/${docId}/download`);
+      if (res.data?.download_url) {
+        // Opens the 15-minute Amazon S3 VIP link directly in a new tab!
+        window.open(res.data.download_url, '_blank');
+        return;
+      }
+    } catch (err) {
+      // 2. Fallback: If running locally without S3, download the file directly
+      try {
+        const blobRes = await api.get(`/documents/${docId}/download`, { responseType: 'blob' });
+        const url = window.URL.createObjectURL(new Blob([blobRes.data], { type: 'application/pdf' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (streamErr) {
+        console.error('Download error:', streamErr);
+        alert('Unable to download original file.');
+      }
     }
   };
 
@@ -227,8 +254,18 @@ export const Documents = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
                   <Badge status={doc.status} />
+
+                  {/* Download / View Source PDF Button */}
+                  <button
+                    onClick={() => handleDownload(doc.id, doc.filename)}
+                    className="p-1.5 text-zinc-400 hover:text-brand-400 hover:bg-zinc-800 rounded-lg transition"
+                    title="Download / View Source PDF"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
+
                   {isAgent && (
                     <button
                       onClick={() => handleDelete(doc.id, doc.filename)}
