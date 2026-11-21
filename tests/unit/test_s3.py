@@ -35,11 +35,14 @@ def test_s3_upload_and_download_local_fallback(monkeypatch):
 
 def test_s3_upload_and_download_mocked(monkeypatch):
     """Test S3 interactions with a fake boto3 client (MagicMock)."""
-    # 1. Create fake S3 client
+    # 1. Set mock bucket name so the test passes in CI environments without a .env file
+    monkeypatch.setattr(settings, "S3_BUCKET_NAME", "mock-bucket")
+
+    # 2. Create fake S3 client
     fake_s3 = MagicMock()
     fake_s3.generate_presigned_url.return_value = "https://fake-s3-presigned-url.com/invoice.pdf"
 
-    # 2. Swap the real S3 client with our fake
+    # 3. Swap the real S3 client with our fake
     monkeypatch.setattr("app.services.s3.get_s3_client", lambda: fake_s3)
 
     dummy_bytes = b"%PDF-1.4 dummy pdf bytes for unit testing"
