@@ -39,6 +39,7 @@ def test_create_ticket():
     assert uuid.UUID(data['id'])
     assert data['subject'] == 'Test Subject'
     assert data['description'] == 'Test Description'
+    client.delete(f"/tickets/{data['id']}")
 
 
 def test_get_all_ticket():
@@ -70,6 +71,7 @@ def test_get_ticket_by_id():
     assert uuid.UUID(data['id']) == uuid.UUID(id)
     assert data['subject'] == 'Test Subject 1'
     assert data['description'] == 'Test Description 1'
+    client.delete(f"/tickets/{id}")
 
 
 def test_nonexistent_ticket():
