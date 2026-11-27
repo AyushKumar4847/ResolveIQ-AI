@@ -10,9 +10,9 @@ from app.services.s3 import (
 
 
 def test_s3_upload_and_download_local_fallback(monkeypatch):
-    """Test local filesystem fallback when AWS credentials are not configured."""
-    # 1. Temporarily pretend AWS key is None
-    monkeypatch.setattr(settings, "AWS_ACCESS_KEY_ID", None)
+    """Test local filesystem fallback when S3 bucket is not configured."""
+    # 1. Temporarily pretend S3_BUCKET_NAME is None
+    monkeypatch.setattr(settings, "S3_BUCKET_NAME", None)
 
     dummy_bytes = b"%PDF-1.4 dummy pdf bytes for unit testing"
     filename = "test_invoice.pdf"

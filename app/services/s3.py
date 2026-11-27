@@ -5,16 +5,21 @@ from pathlib import Path
 
 # connect to aws
 def get_s3_client():
-    # If the user hasn't added AWS keys yet, return None so the app doesn't crash
-    if settings.AWS_ACCESS_KEY_ID is None:
+    # If no S3 bucket is configured, return None so the app falls back to local disk
+    if not settings.S3_BUCKET_NAME:
         return None
 
-    return boto3.client(
-        "s3",
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        region_name=settings.AWS_REGION,
-    )
+    # Local dev: use explicit keys from .env if provided
+    if settings.AWS_ACCESS_KEY_ID and settings.AWS_SECRET_ACCESS_KEY:
+        return boto3.client(
+            "s3",
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_REGION,
+        )
+
+    # Production EC2: boto3 automatically uses the attached IAM Role
+    return boto3.client("s3", region_name=settings.AWS_REGION)
 
 def upload_document_file(file_bytes:bytes, filename:str):
 
