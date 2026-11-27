@@ -1,0 +1,8 @@
+services:
+  api:
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-southeast-2
+        awslogs-group: /resolveiq/api
+        awslogs-create-group: "true"
