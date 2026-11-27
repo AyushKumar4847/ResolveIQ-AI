@@ -2,6 +2,7 @@ from langchain_groq import ChatGroq
 from app.core.config import settings
 from langchain_core.prompts import ChatPromptTemplate
 from app.services.retrieval import search_chunks
+from app.services.cache import get_cached_response, set_cached_response
 
 llm = ChatGroq(model="openai/gpt-oss-20b",
     api_key=settings.GROQ_API_KEY)
@@ -20,6 +21,12 @@ Formatting Guidelines:
 ])
 
 def generate_answers(db, question):
+
+    # 1. Check Redis first!
+    cached = get_cached_response(question)
+    if cached:
+        return cached["answer"], cached["evidence"]
+    
     chunks = search_chunks(db, question)
     context_chunks = []
     for chunk in chunks:
@@ -31,4 +38,8 @@ def generate_answers(db, question):
     chain = prompt | llm  
 
     output = chain.invoke({"context": context, "question": question})
+    
+    set_cached_response(question, output.content, context)
+    
     return output.content, context
+

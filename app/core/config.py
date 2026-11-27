@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     AWS_REGION: str = "us-east-1"
     S3_BUCKET_NAME: str | None = None
 
+    # Redis In-Memory Cache
+    REDIS_URL: str = "redis://localhost:6379/0"
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

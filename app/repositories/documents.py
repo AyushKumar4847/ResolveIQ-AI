@@ -43,6 +43,7 @@ def delete_document(db: Session, document_id: uuid.UUID, current_user) -> bool:
     if document is None:
         return False
 
+    db.query(DocumentChunk).filter(DocumentChunk.document_id == document_id).delete(synchronize_session=False)
     db.delete(document)
     db.commit()
     return True
